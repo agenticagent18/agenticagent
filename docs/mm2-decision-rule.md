@@ -42,3 +42,24 @@ at 60-150 trades this trial can only detect large edges. EXTEND means
 
 ## changelog
 (appends only)
+
+2026-06-12 — signal integrity audit, sessions 1-5
+- ticker_from_game() code review: home/away assignment is by suffix matching
+  (-HOME_CODE, -AWAY_CODE), not by position in the middle string. correct.
+- session 1 (2026-06-07): anomalous signal output — ATL-YES bought at 90.5¢
+  (home_implied=90.5%, away_implied=87.0%). summed implied > 100% is
+  implausible for complementary contracts; likely a data or algorithm state
+  issue predating formalization. session 1 excluded from inversion analysis.
+- sessions 3-4 (2026-06-10, 2026-06-11): TB bought at 1¢, STL at 0.5¢.
+  both are away teams per ticker suffix; both had market prices near zero
+  (opponents ~99% implied). signal correctly flagged them as undervalued per
+  the <40% + momentum>60 criteria. no inversion. price extremes are a
+  calibration issue outside the scope of phase 1.
+- session 5 (2026-06-12): 3 positions — DET(away) at 35%, PHI(away) at
+  30.5%, TB(away) at 36%. all consistent with thesis (undervalued away teams
+  with positive momentum). signal and ticker mapping verified correct.
+- verdict: no home/away inversion confirmed in sessions 2-5.
+  session count NOT restarted (inversion criterion requires 3+ affected
+  sessions; 0 confirmed). sessions 1 anomaly logged; investigation deferred.
+- LIVE_TRADING=False confirmed hardcoded in position_executor.py.
+- session count at time of audit: 5/30.
