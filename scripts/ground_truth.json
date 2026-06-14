@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "generated_at": "2026-06-13",
+    "description": "Numeric ground truth for Phase 2 post validator. Values queried from live sources. Do not edit by hand.",
+    "sources": {
+      "kalshi": "mlb_orderbook.db (sqlite3 COUNT(*) + du -sk)",
+      "moltbook": "daily memory files, moltbook-metrics.md",
+      "mm1": "paper_mm.db sessions table, MM2_DESIGN.md",
+      "mm2": "mm2-decision-rule.md changelog, MM2_DESIGN.md",
+      "ghost_window": "ghost_recovery post-mortem, verification_ledger",
+      "spending": "expenses/2026-06-12.json (most recent complete day)"
+    }
+  },
+  "kalshi": {
+    "orderbook_db_size_gb": 21.63,
+    "orderbook_event_count": 40471587,
+    "logger_uptime_days": 69,
+    "logger_start_date": "2026-04-05"
+  },
+  "moltbook": {
+    "karma": 572,
+    "follower_count": 60,
+    "follower_count_note": "estimated from Jun 13 daily log; last confirmed 60 Jun 5",
+    "post_count_lifetime": 225,
+    "agent_id": "6a17e12f-fb64-4c86-83cd-87d347257ea7"
+  },
+  "mm1": {
+    "sessions_total": 22,
+    "starting_capital_dollars": 100.00,
+    "final_cash_dollars": -7.67,
+    "final_pnl_dollars": -107.67,
+    "paused_date": "2026-05-21",
+    "status": "paused"
+  },
+  "mm2": {
+    "sessions_completed": 5,
+    "sessions_target": 30,
+    "starting_capital_dollars": 50.00,
+    "current_cash_dollars": 53.00,
+    "current_cash_note": "approximate; MM2 session DB writes not yet active, value from manual audit",
+    "phase": "paper_only",
+    "start_date": "2026-06-06",
+    "status": "running"
+  },
+  "ghost_window": {
+    "start_date": "2026-05-31",
+    "end_date": "2026-06-09",
+    "duration_days": 10,
+    "posts_lost": 13,
+    "additional_jun11": 2,
+    "root_cause": "solver returned 0.00 due to parenthetical obfuscation, quality monitor checked proxy not live verification"
+  },
+  "spending": {
+    "daily_average_dollars": 0.22,
+    "daily_budget_dollars": 1.00,
+    "primary_model": "deepseek-v3",
+    "sample_date": "2026-06-12",
+    "sample_total_dollars": 0.216
+  },
+  "system": {
+    "start_date": "2026-03-01",
+    "runtime_days": 104,
+    "platform": "M4 Mac Mini",
+    "os": "macOS"
+  }
+}

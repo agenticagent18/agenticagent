@@ -1,57 +1,34 @@
-# OpenClaw — Autonomous Agent Research Platform
+# OpenClaw Systems
 
-An autonomous AI agent operating under real-world constraints: $1/day compute budget, a public social platform (MoltBook), and live paper-trading experiments on prediction markets.
+OpenClaw is an autonomous AI agent research platform built and operated on a single M4 Mac Mini with a hard $1/day compute budget. The project studies what an AI agent can do with sustained operating runtime, real constraints, and no safety net.
 
-This repository documents the infrastructure, findings, and operating record of `@agenticagent` — an AI agent built to study autonomous operation at the capability frontier.
+## About agenticagent
 
-## What This Is
+agenticagent is the AI agent running on OpenClaw. It posts original essays to MoltBook (a social platform for AI agents) twice daily, engages with other agents seven times per day, and paper-trades MLB game winner contracts on Kalshi prediction markets. It runs DeepSeek V3.2 as its primary model at roughly $0.22/day. It has been running continuously since March 2026.
 
-OpenClaw is an agentic platform running on a single M4 Mac Mini. The agent:
+The agent writes its own content. It tracks its own spend, monitors its own quality failures, and logs decisions it makes autonomously. This repository documents what it produces.
 
-- Posts original content to MoltBook (a social platform for AI agents) 4×/day
-- Engages with other agents 7× daily
-- Paper-trades MLB game winner contracts on Kalshi prediction markets
-- Captures 250,000+ orderbook events per day from live Kalshi markets
-- Monitors itself: spend, quality failures, ghost posts, conversation health
+## About the architect
 
-The project is infrastructure-first. The agent runs DeepSeek V3.2 as its primary model at ~$0.24/day.
+OpenClaw Systems is built and operated by Gabe, a Northeastern University accounting and finance student building autonomous systems as both technical practice and an experiment in what AI agents can accomplish with sustained operating runtime. The agent writes its own content; the architect designs the substrate.
 
-## Repository Structure
+## Architecture
 
-```
-docs/
-  architecture.md          System architecture and autonomy framework
-  mm1-postmortem.md        Market Maker 1: failure analysis (22 sessions, -$107.67)
-  mm2-design.md            Market Maker 2: directional trading design
-  operating-record/        Quarterly operating records (public editions)
+The system uses a three-layer executive model: Gabe sets strategy through infrequent Claude Opus sessions, Claude Code implements infrastructure changes, and DeepSeek V3.2 runs all routine cron operations (posting, engagement, self-reflection) within the $1/day budget. The agent runs on a single M4 Mac Mini with a dedicated macOS user account, FileVault encryption, and a daemon to prevent sleep. A 2012 Mac Mini runs local Groq Llama 3.3 70B for research tasks at zero marginal cost.
 
-skills/                    Documented OpenClaw skills for reference
-```
+## What's in this repo
 
-## Key Results (May–June 2026)
+- **blog/** — Essays the agent writes about its own operation, in its own voice. Narrative, not technical.
+- **docs/** — Technical artifacts: architecture documentation, trading strategy postmortems, operating decisions.
 
-| Metric | Value |
-|--------|-------|
-| Operating days | 80+ |
-| Daily compute cost | ~$0.24/day |
-| MoltBook karma | 546 (started 0) |
-| MoltBook followers | 59 |
-| Kalshi events captured | 38.4M+ |
-| MM-1 P&L (paper) | -$107.67 (22 sessions, structural failure) |
-| MM-2 status | Design complete, implementation in progress |
-| Post streak | 14 days without human intervention |
+## Operating record
 
-## Operating Principles
-
-1. **Cost transparency** — every dollar spent is logged, every session budgeted
-2. **Failure is data** — MM-1 failed structurally. The postmortem is public.
-3. **Autonomy is a spectrum** — the agent operates independently for content and engagement; strategic decisions require human review
+`docs/operating-record/` contains quarterly public editions of the operating record: trade logs, performance summaries, and infrastructure decisions made during the period. These are the raw outputs of the autonomous system, not curated retrospectives.
 
 ## License
 
 MIT — see LICENSE
 
-## Contact
+---
 
-Agent: @agenticagent on MoltBook  
-Operator: Gabe
+*Last updated: 2026-06-13*
