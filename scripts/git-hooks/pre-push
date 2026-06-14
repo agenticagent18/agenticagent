@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# pre-push: second-layer scan — catches secrets that bypassed pre-commit (e.g. --no-verify)
+# Scans all commits being pushed (not yet on remote).
+# Exit non-zero to abort the push.
+
+set -euo pipefail
+
+SECRETS_FILE="$(git rev-parse --show-toplevel)/.gitignore-secrets"
+
+PATTERNS=(
+    'sk-[A-Za-z0-9]{20,}'
+    'AKIA[0-9A-Z]{16}'
+    'ghp_[A-Za-z0-9]{36,}'
+    'github_pat_[A-Za-z0-9_]{82,}'
+    'xox[bpsr]-[0-9]+-[0-9]+'
+    'gsk_[A-Za-z0-9]{40,}'
+    'AIza[0-9A-Za-z_-]{35}'
+    'moltbook_sk_[A-Za-z0-9_-]+'
+    'eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}'
+    'Bearer [A-Za-z0-9_-]{20,}'
+    '(DEEPSEEK|ANTHROPIC|MOLTBOOK|KALSHI|GROQ|GEMINI|GITHUB_PAT|X_API)[A-Z_]*[[:space:]]*[=:][[:space:]]*["'"'"'][A-Za-z0-9_-]{16,}'
+    'password[[:space:]"'"'"']*[:=][[:space:]]*["'"'"'][^"'"'"']{6,}'
+    '\+18183184900'
+    '\+1[0-9]{10}'
+    '\([0-9]{3}\)[[:space:]]*[0-9]{3}-?[0-9]{4}'
+    '10\.0\.0\.5'
+    '192\.168\.[0-9]+'
+    '172\.(1[6-9]|2[0-9]|3[01])\.'
+    '\bGlass\b'
+)
+
+EXTRA_PATTERNS=()
+if [ -f "$SECRETS_FILE" ]; then
+    while IFS= read -r line; do
+        [[ -z "$line" || "$line" == \#* ]] && continue
+        EXTRA_PATTERNS+=("$line")
+    done < "$SECRETS_FILE"
+fi
+
+ALL_PATTERNS=("${PATTERNS[@]}" ${EXTRA_PATTERNS+"${EXTRA_PATTERNS[@]}"})
+COMBINED=$(printf '%s\n' "${ALL_PATTERNS[@]}" | paste -sd'|' -)
+
+# Read remote/branch from stdin (pre-push hook protocol)
+while read -r local_ref local_sha remote_ref remote_sha; do
+    # Determine commit range
+    if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+        # New branch — scan all commits
+        RANGE="$local_sha"
+        COMMITS=$(git log --pretty=format:'%H' "$RANGE" 2>/dev/null)
+    else
+        RANGE="${remote_sha}..${local_sha}"
+        COMMITS=$(git log --pretty=format:'%H' "$RANGE" 2>/dev/null)
+    fi
+
+    [ -z "$COMMITS" ] && continue
+
+    FOUND=0
+    while IFS= read -r sha; do
+        [ -z "$sha" ] && continue
+        files=$(git show --pretty="format:" --name-only "$sha" 2>/dev/null)
+        while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            content=$(git show "$sha:$file" 2>/dev/null) || continue
+            matches=$(echo "$content" | grep -nE "$COMBINED" 2>/dev/null || true)
+            if [ -n "$matches" ]; then
+                echo ""
+                echo "  BLOCKED: commit ${sha:0:8} file $file"
+                while IFS= read -r match; do
+                    lineno=$(echo "$match" | cut -d: -f1)
+                    snippet=$(echo "$match" | cut -d: -f2- | cut -c1-80)
+                    echo "    line $lineno: $snippet"
+                done <<< "$matches"
+                FOUND=1
+            fi
+        done <<< "$files"
+    done <<< "$COMMITS"
+
+    if [ "$FOUND" -ne 0 ]; then
+        echo ""
+        echo "pre-push hook: push blocked — potential secret detected in commits being pushed."
+        echo "History rewrite required before push is safe."
+        echo "Bypass: git push --no-verify  (requires iMessage sign-off per security policy)"
+        echo ""
+        exit 1
+    fi
+done
+
+exit 0

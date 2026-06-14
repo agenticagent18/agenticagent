@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# pre-commit: block secrets from entering the repo
+# Scans staged files only (git diff --cached).
+# Exit non-zero to abort the commit.
+
+set -euo pipefail
+
+HOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SECRETS_FILE="$(git rev-parse --show-toplevel)/.gitignore-secrets"
+
+# ── Pattern list (ERE) ─────────────────────────────────────────────────────────
+PATTERNS=(
+    # API keys — specific formats
+    'sk-[A-Za-z0-9]{20,}'
+    'AKIA[0-9A-Z]{16}'
+    'ghp_[A-Za-z0-9]{36,}'
+    'github_pat_[A-Za-z0-9_]{82,}'
+    'xox[bpsr]-[0-9]+-[0-9]+'
+    'gsk_[A-Za-z0-9]{40,}'
+    'AIza[0-9A-Za-z_-]{35}'
+    'moltbook_sk_[A-Za-z0-9_-]+'
+    # Tokens
+    'eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}'
+    'Bearer [A-Za-z0-9_-]{20,}'
+    # Hardcoded env secrets
+    '(DEEPSEEK|ANTHROPIC|MOLTBOOK|KALSHI|GROQ|GEMINI|GITHUB_PAT|X_API)[A-Z_]*[[:space:]]*[=:][[:space:]]*["'"'"'][A-Za-z0-9_-]{16,}'
+    # Password assignments
+    'password[[:space:]"'"'"']*[:=][[:space:]]*["'"'"'][^"'"'"']{6,}'
+    # Phone numbers
+    '\+18183184900'
+    '\+1[0-9]{10}'
+    '\([0-9]{3}\)[[:space:]]*[0-9]{3}-?[0-9]{4}'
+    # Internal infrastructure
+    '10\.0\.0\.5'
+    '192\.168\.[0-9]+'
+    '172\.(1[6-9]|2[0-9]|3[01])\.'
+    # Name blacklist
+    '\bGlass\b'
+)
+
+# Load extra patterns from .gitignore-secrets if it exists
+EXTRA_PATTERNS=()
+if [ -f "$SECRETS_FILE" ]; then
+    while IFS= read -r line; do
+        [[ -z "$line" || "$line" == \#* ]] && continue
+        EXTRA_PATTERNS+=("$line")
+    done < "$SECRETS_FILE"
+fi
+
+ALL_PATTERNS=("${PATTERNS[@]}" ${EXTRA_PATTERNS+"${EXTRA_PATTERNS[@]}"})
+
+# ── Build combined regex ───────────────────────────────────────────────────────
+COMBINED=$(printf '%s\n' "${ALL_PATTERNS[@]}" | paste -sd'|' -)
+
+# ── Scan staged files ─────────────────────────────────────────────────────────
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+if [ -z "$STAGED" ]; then
+    exit 0
+fi
+
+FOUND=0
+while IFS= read -r file; do
+    [ -z "$file" ] && continue
+    # Read file from index (staged version), not working tree
+    content=$(git show ":$file" 2>/dev/null) || continue
+    matches=$(echo "$content" | grep -nE "$COMBINED" 2>/dev/null || true)
+    if [ -n "$matches" ]; then
+        echo ""
+        echo "  BLOCKED: $file"
+        while IFS= read -r match; do
+            lineno=$(echo "$match" | cut -d: -f1)
+            snippet=$(echo "$match" | cut -d: -f2- | cut -c1-80)
+            echo "    line $lineno: $snippet"
+        done <<< "$matches"
+        FOUND=1
+    fi
+done <<< "$STAGED"
+
+if [ "$FOUND" -ne 0 ]; then
+    echo ""
+    echo "pre-commit hook: commit blocked — potential secret or personal identifier detected."
+    echo "Review findings above. If this is a false positive, bypass with:"
+    echo "  git commit --no-verify  (requires iMessage sign-off per security policy)"
+    echo ""
+    exit 1
+fi
+
+exit 0

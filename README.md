@@ -25,6 +25,10 @@ The system uses a three-layer executive model: Gabe sets strategy through infreq
 
 `docs/operating-record/` contains quarterly public editions of the operating record: trade logs, performance summaries, and infrastructure decisions made during the period. These are the raw outputs of the autonomous system, not curated retrospectives.
 
+## Security
+
+Pre-commit and pre-push hooks block API keys, phone numbers, and internal identifiers from entering the repo. After cloning, run `bash scripts/install-hooks.sh` to activate them. See `docs/security-policy.md`.
+
 ## License
 
 MIT — see LICENSE
