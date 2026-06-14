@@ -1,80 +1,39 @@
-# Phase 1 Setup — Manual Steps
+# Phase 1 Setup — Status
 
-These are the steps Gabe needs to complete to connect this repo to GitHub Pages. The agent cannot do these; they require a browser and your GitHub account.
+## Steps
 
----
+**Step 1 ✓ — GitHub account created:** agenticagent18
 
-## Step 1: Create a GitHub Account (if you don't have one)
+**Step 2 ✓ — Repository created:** github.com/agenticagent18/agenticagent (public)
 
-Go to github.com and sign up. Use any username — it will be visible in the repo URL. Suggested: `openclaw-systems` or `gabe-openclaw`.
+**Step 3 — GitHub Pages:** Deferred to Phase 3. Will be enabled once the blog publishing flow is built and the first real post is ready.
 
----
+**Step 4 ✓ — PAT generated:** Classic token with `repo` scope.
 
-## Step 2: Create the Repository
+**Step 5 ✓ — PAT stored:** `GITHUB_PAT` key present in `~/.openclaw/openclaw.json` env section.
 
-1. Go to github.com/new
-2. Repository name: `openclaw-public` (or `openclaw`)
-3. Description: `OpenClaw Systems — public artifacts from an autonomous AI agent`
-4. Set to **Public**
-5. Do NOT initialize with a README (the repo already has content)
-6. Click **Create repository**
+**Step 6 ✓ — Remote configured and pushed:** Force-pushed 6 commits, replacing GitHub's auto-generated placeholder. Verified public via API.
 
 ---
 
-## Step 3: Enable GitHub Pages
+## Step 7 (next session): Write blog post #1
 
-1. Go to the repository → **Settings** → **Pages**
-2. Source: **Deploy from a branch**
-3. Branch: `main`, folder: `/ (root)`
-4. Click **Save**
+The first post will be written from primary source documents — not reconstructed from memory:
 
-Pages will be available at `https://<your-username>.github.io/openclaw-public/` within a few minutes.
+- `~/.openclaw/workspace/memory/ghost_recovery_2026-06-09.md` — root cause postmortem
+- `~/.openclaw/workspace/memory/` daily logs for May 31 – Jun 13 — timeline and sequence
+- `public/scripts/ground_truth.json` — numeric facts (posts_lost: 15, not 13)
+- The HOTFIX session's CC output — solver rewrite specifics
 
----
-
-## Step 4: Generate a Personal Access Token (PAT)
-
-The agent needs this to push commits automatically in Phase 2.
-
-1. Go to github.com → **Settings** (your profile, top right) → **Developer settings** → **Personal access tokens** → **Tokens (classic)**
-2. Click **Generate new token (classic)**
-3. Note: `openclaw-autopost`
-4. Expiration: **No expiration** (or 1 year — your choice)
-5. Scopes: check **repo** (the top-level checkbox, which includes all sub-scopes)
-6. Click **Generate token**
-7. Copy the token immediately — GitHub will not show it again
+Doctrinal frame to preserve: every health check must assert an externally observable outcome, not a proxy. The essay should be written by DeepSeek from these sources, reviewed by Gabe, then committed to `blog/` and pushed.
 
 ---
 
-## Step 5: Store the PAT in openclaw.json
+## Phase 2 (deferred)
 
-Add the PAT and repo URL to the agent's config so Phase 2 can push automatically.
+Publishing infrastructure to build once post #1 is written:
 
-Open `~/.openclaw/openclaw.json` and add or update:
-
-```json
-"github": {
-  "pat": "ghp_YOUR_TOKEN_HERE",
-  "repo_url": "https://github.com/YOUR_USERNAME/openclaw-public.git",
-  "pages_url": "https://YOUR_USERNAME.github.io/openclaw-public/"
-}
-```
-
----
-
-## Step 6: Connect the Local Repo to GitHub
-
-Run this in the `public/` directory (the agent can do this once you confirm the repo URL):
-
-```bash
-git remote add origin https://YOUR_USERNAME:ghp_YOUR_TOKEN_HERE@github.com/YOUR_USERNAME/openclaw-public.git
-git push -u origin main --tags
-```
-
----
-
-## After Setup
-
-Once the remote is connected and the PAT is in openclaw.json, the agent can complete Phase 2: automated crons that push new blog posts and update ground_truth.json after each MoltBook post.
-
-Current state: `public/` has v0.2.0 tagged. Blog draft `001-system-lied-four-ways.md` is in `blog/drafts/` pending your review before publication.
+- Numeric validator: checks post facts against `ground_truth.json` before push
+- Secrets scanner cron: runs the pattern scan on any new file before commit
+- Cadence enforcement: no more than 1-2 posts/month gate
+- GitHub Pages: enable after first real post is live
