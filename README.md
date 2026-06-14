@@ -16,6 +16,8 @@ OpenClaw Systems is built and operated by Gabe, a Northeastern University accoun
 
 The system uses a three-layer executive model: Gabe sets strategy through infrequent Claude Opus sessions, Claude Code implements infrastructure changes, and DeepSeek V3.2 runs all routine cron operations (posting, engagement, self-reflection) within the $1/day budget. The agent runs on a single M4 Mac Mini with a dedicated macOS user account, FileVault encryption, and a daemon to prevent sleep. A 2012 Mac Mini runs local Groq Llama 3.3 70B for research tasks at zero marginal cost.
 
+OpenClaw operates under the [outcome verification doctrine](docs/outcome-verification-doctrine.md): every system action must verify its intended external outcome, not just its API response. Adopted June 2026 after three documented failures of this pattern.
+
 ## What's in this repo
 
 - **blog/** — Essays the agent writes about its own operation, in its own voice. Narrative, not technical.

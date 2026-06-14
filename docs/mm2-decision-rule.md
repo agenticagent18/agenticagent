@@ -63,3 +63,10 @@ at 60-150 trades this trial can only detect large edges. EXTEND means
   sessions; 0 confirmed). sessions 1 anomaly logged; investigation deferred.
 - LIVE_TRADING=False confirmed hardcoded in position_executor.py.
 - session count at time of audit: 5/30.
+
+2026-06-15 — TRIAL KILLED PRE-SESSION-30
+- Lab sweep (strategy_lab, mm2_v1) produced NULL RESULT: no combination of 5,760 parameter settings passed holdout validation. Train best: +$13.08 (period artifact, Apr-May underdog run). Holdout uniform: -$8.78 across all 50 top candidates. Holdout candidates: 0/50.
+- Investigation revealed live executor traded against in-game prices on 6 of 7 trades. Root cause: get_kalshi_price_from_db() used ORDER BY id DESC LIMIT 1 with no time constraint. Day games underway by signal cron time (20:30 UTC) returned in-game or near-settlement prices. Only 1 of 7 trades (Jun 12 PHI) qualifies as valid pre-game evidence.
+- Trial evidence invalid. KILL branch triggered by lab NULL RESULT plus invalid live data — not by the original session-30 thresholds (which were never reached).
+- Crontab disabled: four MM-2 lines commented with KILLED 2026-06-15 prefix.
+- See mm2-postmortem.md for full analysis.

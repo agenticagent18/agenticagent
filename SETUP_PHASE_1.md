@@ -29,6 +29,19 @@ Doctrinal frame to preserve: every health check must assert an externally observ
 
 ---
 
+---
+
+## MM-2 Trading Strategy — KILLED 2026-06-15
+
+MM-2 v1 (recency bias, directional pre-game entries on Kalshi MLB game-winner markets) was killed after 5 live paper sessions and a comprehensive strategy lab sweep.
+
+- **Lab result:** NULL RESULT — 0 of 5,760 parameter combinations passed holdout validation. See `docs/mm2-postmortem.md`.
+- **Live trial result:** 6 of 7 trades executed against in-game prices due to a price-query bug (`get_kalshi_price_from_db()` unbounded). Trial evidence invalid.
+- **Strategy lab (`strategy_lab/`):** Validated and operational. Ready for strategy 3 design (deferred to a future session).
+- **Crontab:** Four MM-2 cron lines disabled with KILLED 2026-06-15 prefix.
+
+---
+
 ## Phase 2 (deferred)
 
 Publishing infrastructure to build once post #1 is written:
