@@ -1,0 +1,190 @@
+{
+  "spec_version": "1.0",
+  "backtest_date": "2026-06-14T04:32:57.386882Z",
+  "data_window": {
+    "earliest_game": "2026-04-12",
+    "latest_game": "2026-06-13"
+  },
+  "eligibility": {
+    "total_games_in_db": 842,
+    "eligible_for_backtest": 694,
+    "signaled": 49,
+    "exclusion_breakdown": {
+      "no_snapshot": 88,
+      "missing_recent_form": 46,
+      "no_outcome": 14
+    }
+  },
+  "signal_breakdown": {
+    "total_games_signaled": 49,
+    "underdog_momentum": 49,
+    "favorite_vs_hot_opp": 0,
+    "skip_count": 645
+  },
+  "performance": {
+    "trades_executed": 49,
+    "net_pnl_dollars": -2.19,
+    "net_pnl_pct_of_50": -4.4,
+    "win_rate": 0.3673,
+    "breakeven_win_rate": 0.3685,
+    "edge_over_breakeven_pp": -0.1,
+    "avg_return_per_trade": -0.0447,
+    "max_drawdown_dollars": 4.01,
+    "daily_stop_hits": 0,
+    "top_2_trade_share_of_gross_profit": 0.2341
+  },
+  "by_signal_type": {
+    "underdog_momentum": {
+      "trades": 49,
+      "win_rate": 0.3673,
+      "pnl": -2.19
+    },
+    "favorite_vs_hot_opp": {
+      "trades": 0,
+      "win_rate": 0,
+      "pnl": 0.0
+    }
+  },
+  "daily_pnl_distribution": [
+    {
+      "date": "2026-04-12",
+      "pnl": -0.365
+    },
+    {
+      "date": "2026-04-13",
+      "pnl": 0.5
+    },
+    {
+      "date": "2026-04-14",
+      "pnl": 0.63
+    },
+    {
+      "date": "2026-04-15",
+      "pnl": -0.375
+    },
+    {
+      "date": "2026-04-17",
+      "pnl": 0.605
+    },
+    {
+      "date": "2026-04-18",
+      "pnl": -0.395
+    },
+    {
+      "date": "2026-04-20",
+      "pnl": -0.335
+    },
+    {
+      "date": "2026-04-21",
+      "pnl": 0.615
+    },
+    {
+      "date": "2026-04-22",
+      "pnl": -0.375
+    },
+    {
+      "date": "2026-04-23",
+      "pnl": -0.335
+    },
+    {
+      "date": "2026-04-28",
+      "pnl": -1.105
+    },
+    {
+      "date": "2026-04-30",
+      "pnl": 0.52
+    },
+    {
+      "date": "2026-05-03",
+      "pnl": -1.125
+    },
+    {
+      "date": "2026-05-04",
+      "pnl": -0.355
+    },
+    {
+      "date": "2026-05-05",
+      "pnl": -0.365
+    },
+    {
+      "date": "2026-05-06",
+      "pnl": -0.335
+    },
+    {
+      "date": "2026-05-07",
+      "pnl": 0.605
+    },
+    {
+      "date": "2026-05-11",
+      "pnl": -0.395
+    },
+    {
+      "date": "2026-05-12",
+      "pnl": 0.735
+    },
+    {
+      "date": "2026-05-13",
+      "pnl": -0.63
+    },
+    {
+      "date": "2026-05-14",
+      "pnl": -0.375
+    },
+    {
+      "date": "2026-05-16",
+      "pnl": 0.615
+    },
+    {
+      "date": "2026-05-18",
+      "pnl": -0.395
+    },
+    {
+      "date": "2026-05-22",
+      "pnl": 1.845
+    },
+    {
+      "date": "2026-05-23",
+      "pnl": -1.095
+    },
+    {
+      "date": "2026-05-24",
+      "pnl": 1.055
+    },
+    {
+      "date": "2026-05-25",
+      "pnl": 0.615
+    },
+    {
+      "date": "2026-05-27",
+      "pnl": -0.74
+    },
+    {
+      "date": "2026-05-31",
+      "pnl": -1.35
+    },
+    {
+      "date": "2026-06-04",
+      "pnl": -0.385
+    },
+    {
+      "date": "2026-06-05",
+      "pnl": 0.24
+    },
+    {
+      "date": "2026-06-07",
+      "pnl": -0.385
+    },
+    {
+      "date": "2026-06-08",
+      "pnl": -0.385
+    },
+    {
+      "date": "2026-06-12",
+      "pnl": 0.915
+    },
+    {
+      "date": "2026-06-13",
+      "pnl": -0.085
+    }
+  ]
+}
